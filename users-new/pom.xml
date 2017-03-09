@@ -111,7 +111,7 @@
       <artifactId>gwt-user</artifactId>
       <scope>provided</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
@@ -447,6 +447,8 @@
             <fileset>
               <directory>${basedir}</directory>
               <includes>
+                <!-- Temporary fix for the project build -->
+                <include>src/main/java/**/.*.java</include>
                 <include>src/main/webapp/app/</include>
                 <include>src/main/webapp/WEB-INF/deploy/</include>
                 <include>src/main/webapp/WEB-INF/lib/</include>
