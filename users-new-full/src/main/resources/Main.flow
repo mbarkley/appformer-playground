@@ -1,0 +1,78 @@
+import SaveExpenseReport : ExpenseReport -> ExpenseReport ;
+import UpdateExpenseReport : ExpenseReport -> ExpenseReport ;
+import DeleteExpenseReport : ExpenseReport -> ExpenseReport ;
+import LoadExpenseReport : Unit -> FlowDataProvider<ExpenseReport> ;
+import ExpenseReportToExpenseReportFormModel : ExpenseReport -> ExpenseReportFormModel ;
+import ExpenseReportFormModelToExpenseReport : ExpenseReportFormModel -> ExpenseReport ;
+import NewExpenseReport : Unit -> ExpenseReport ;
+import NewExpenseReportFormModel : Unit -> ExpenseReportFormModel ;
+import ExpenseReportListView : FlowDataProvider<ExpenseReport> -> Command<CrudOperation,ExpenseReport> ;
+import ExpenseReportFormView : ExpenseReportFormModel -> Optional<ExpenseReportFormModel> ;
+import SaveExpense : Expense -> Expense ;
+import UpdateExpense : Expense -> Expense ;
+import DeleteExpense : Expense -> Expense ;
+import LoadExpense : Unit -> FlowDataProvider<Expense> ;
+import ExpenseToExpenseFormModel : Expense -> ExpenseFormModel ;
+import ExpenseFormModelToExpense : ExpenseFormModel -> Expense ;
+import NewExpense : Unit -> Expense ;
+import NewExpenseFormModel : Unit -> ExpenseFormModel ;
+import ExpenseListView : FlowDataProvider<Expense> -> Command<CrudOperation,Expense> ;
+import ExpenseFormView : ExpenseFormModel -> Optional<ExpenseFormModel> ;
+import SaveAssociate : Associate -> Associate ;
+import UpdateAssociate : Associate -> Associate ;
+import DeleteAssociate : Associate -> Associate ;
+import LoadAssociate : Unit -> FlowDataProvider<Associate> ;
+import AssociateToAssociateFormModel : Associate -> AssociateFormModel ;
+import AssociateFormModelToAssociate : AssociateFormModel -> Associate ;
+import NewAssociate : Unit -> Associate ;
+import NewAssociateFormModel : Unit -> AssociateFormModel ;
+import AssociateListView : FlowDataProvider<Associate> -> Command<CrudOperation,Associate> ;
+import AssociateFormView : AssociateFormModel -> Optional<AssociateFormModel> ;
+
+import CREATE : CrudOperation ;
+import UPDATE : CrudOperation ;
+import DELETE : CrudOperation ;
+
+import toUnit : ? -> Unit ;
+import unit : Unit ;
+
+AssociateCrud : Unit -> Unit = LoadAssociate -> AssociateListView -> {
+	Command ( CREATE , associate ) : associate -> AssociateToAssociateFormModel -> AssociateFormView -> MaybeSaveAssociate ,
+	Command ( UPDATE , associate ) : associate -> AssociateToAssociateFormModel -> AssociateFormView -> MaybeUpdateAssociate ,
+	Command ( DELETE , associate ) : associate -> DeleteAssociate -> toUnit
+} ;
+MaybeSaveAssociate : Optional<AssociateFormModel> -> Unit = {
+	Some ( associateFormModel ) : associateFormModel -> AssociateFormModelToAssociate -> SaveAssociate -> toUnit ,
+	None : unit
+} ;
+MaybeUpdateAssociate : Optional<AssociateFormModel> -> Unit = {
+	Some ( associateFormModel ) : associateFormModel -> AssociateFormModelToAssociate -> UpdateAssociate -> toUnit ,
+	None : unit
+} ;
+export Main : Unit -> Unit = ExpenseReportCrud -> Main ;
+ExpenseCrud : Unit -> Unit = LoadExpense -> ExpenseListView -> {
+	Command ( CREATE , expense ) : expense -> ExpenseToExpenseFormModel -> ExpenseFormView -> MaybeSaveExpense ,
+	Command ( UPDATE , expense ) : expense -> ExpenseToExpenseFormModel -> ExpenseFormView -> MaybeUpdateExpense ,
+	Command ( DELETE , expense ) : expense -> DeleteExpense -> toUnit
+} ;
+MaybeSaveExpense : Optional<ExpenseFormModel> -> Unit = {
+	Some ( expenseFormModel ) : expenseFormModel -> ExpenseFormModelToExpense -> SaveExpense -> toUnit ,
+	None : unit
+} ;
+MaybeUpdateExpense : Optional<ExpenseFormModel> -> Unit = {
+	Some ( expenseFormModel ) : expenseFormModel -> ExpenseFormModelToExpense -> UpdateExpense -> toUnit ,
+	None : unit
+} ;
+ExpenseReportCrud : Unit -> Unit = LoadExpenseReport -> ExpenseReportListView -> {
+	Command ( CREATE , expensereport ) : expensereport -> ExpenseReportToExpenseReportFormModel -> ExpenseReportFormView -> MaybeSaveExpenseReport ,
+	Command ( UPDATE , expensereport ) : expensereport -> ExpenseReportToExpenseReportFormModel -> ExpenseReportFormView -> MaybeUpdateExpenseReport ,
+	Command ( DELETE , expensereport ) : expensereport -> DeleteExpenseReport -> toUnit
+} ;
+MaybeSaveExpenseReport : Optional<ExpenseReportFormModel> -> Unit = {
+	Some ( expensereportFormModel ) : expensereportFormModel -> ExpenseReportFormModelToExpenseReport -> SaveExpenseReport -> toUnit ,
+	None : unit
+} ;
+MaybeUpdateExpenseReport : Optional<ExpenseReportFormModel> -> Unit = {
+	Some ( expensereportFormModel ) : expensereportFormModel -> ExpenseReportFormModelToExpenseReport -> UpdateExpenseReport -> toUnit ,
+	None : unit
+} ;
